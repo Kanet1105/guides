@@ -1,3 +1,5 @@
+use addressbook::components::app::run_app;
+
 fn main() {
-    println!("Hello, world!");
+    run_app();
 }
