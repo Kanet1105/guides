@@ -2,56 +2,80 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::io::stdin;
 
-#[derive(Debug)]
-pub struct Entry {
-    display_text: &'static str,
+pub trait Node: fmt::Display {
+    fn run(&self);
 }
 
-impl fmt::Display for Entry {
+/// 하위 노드를 가지는 노드.
+pub struct Internal {
+    name: String,
+    menu: BTreeMap<String, Box<dyn Node>>,
+}
+
+impl fmt::Display for Internal {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.display_text)
+        write!(f, "{}", self.name)
     }
 }
 
-impl Entry {
-    pub fn new(display_text: &'static str) -> Self {
+impl Node for Internal {
+    fn run(&self) {
+        match self.menu.is_empty() {
+            true => println!("[Warning] {} is an empty internal node.", self),
+            false => self.select(),
+        }
+    }
+}
+
+impl Internal {
+    pub fn new(name: String) -> Self {
         Self {
-            display_text,
+            name,
+            menu: BTreeMap::new(),
         }
     }
-}
 
-pub struct Menu<Entry> {
-    entry: BTreeMap<String, Entry>,
-}
-
-impl fmt::Display for Menu<Entry> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let mut menu_table = String::new();
-        for (key, value) in &self.entry {
-            let row = format!("[{}] {}\n", key, value);
-            menu_table.push_str(&row);
-        }
-
-        write!(f, "{}", menu_table)
-    }
-}
-
-impl Menu<Entry> {
-    pub fn new(entry_list: Vec<(String, Entry)>) -> Self {
+    pub fn build(name: String, sub_node: Vec<(String, Box<dyn Node>)>) -> Self {
         Self {
-            entry: entry_list.into_iter().collect(),
+            name,
+            menu: sub_node.into_iter().collect(),
         }
     }
 
-    pub fn run(&self) {
-        // display the menu and wait for a user input.
-        println!("{}", self);
+    fn print(&self) {
+        for (command_text, node) in &self.menu {
+            println!("[{}] {}", command_text, node);
+        }
+    }
+
+    fn select(&self) {
+        self.print();
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
+    }
+}
 
-        // fetch the callback.
-        let value = self.entry.get(input.trim());
-        println!("{:?}", value);
+/// 하위 노드가 없는 말단 노드.
+pub struct Leaf {
+    name: String,
+}
+
+impl fmt::Display for Leaf {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
+impl Node for Leaf {
+    fn run(&self) {
+        println!("{} is a leaf node.", self);
+    }
+}
+
+impl Leaf {
+    pub fn new(name: String) -> Self {
+        Self {
+            name: name.to_string(),
+        }
     }
 }
