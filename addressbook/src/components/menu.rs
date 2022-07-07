@@ -28,6 +28,7 @@ impl Node for Internal {
 }
 
 impl Internal {
+    /// 빈 트리로 초기화
     pub fn new(name: String) -> Self {
         Self {
             name,
@@ -35,10 +36,19 @@ impl Internal {
         }
     }
 
+    /// Vec<(노드 이름, 노드 타입)> 으로부터 하위 노드를 갖도록 초기화
     pub fn build(name: String, sub_node: Vec<(String, Box<dyn Node>)>) -> Self {
         Self {
             name,
             menu: sub_node.into_iter().collect(),
+        }
+    }
+
+    /// 초기화 후 하위 노드 추가
+    pub fn add_menu(&mut self, sub_node: Vec<(String, Box<dyn Node>)>) {
+        match sub_node.is_empty() {
+            true => println!("[Warning] 'parameter: sub_node' is empty!"),
+            false => self.menu = sub_node.into_iter().collect(),
         }
     }
 
@@ -52,6 +62,8 @@ impl Internal {
         self.print();
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
+
+        todo!();
     }
 }
 
@@ -69,6 +81,8 @@ impl fmt::Display for Leaf {
 impl Node for Leaf {
     fn run(&self) {
         println!("{} is a leaf node.", self);
+
+        todo!();
     }
 }
 
