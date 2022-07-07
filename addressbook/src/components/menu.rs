@@ -1,67 +1,57 @@
+use std::collections::BTreeMap;
 use std::fmt;
+use std::io::stdin;
 
-trait Menu: fmt::Display {
-    fn init() -> Self;
-    fn display();
-    fn run(&self);
-}
-
+#[derive(Debug)]
 pub struct Entry {
-    command_text: &'static str,
     display_text: &'static str,
-    // callback: (),
 }
 
 impl fmt::Display for Entry {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[{}] {}", self.command_text, self.display_text)
+        write!(f, "{}", self.display_text)
     }
 }
 
 impl Entry {
-    fn build(command_text: &'static str, display_text: &'static str) -> Self {
+    pub fn new(display_text: &'static str) -> Self {
         Self {
-            command_text,
             display_text,
         }
     }
 }
 
-pub struct MainMenu<Entry> {
-    new_address: Entry,
-    open_address: Entry,
-    create: Entry,
-    read: Entry,
-    update: Entry,
-    delete: Entry,
+pub struct Menu<Entry> {
+    entry: BTreeMap<String, Entry>,
 }
 
-impl fmt::Display for MainMenu<Entry> {
+impl fmt::Display for Menu<Entry> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}\n{}\n{}\n{}\n{}\n{}\n",
-            self.new_address,
-            self.open_address,
-            self.create,
-            self.read,
-            self.update,
-            self.delete,
-        )
+        let mut menu_table = String::new();
+        for (key, value) in &self.entry {
+            let row = format!("[{}] {}\n", key, value);
+            menu_table.push_str(&row);
+        }
+
+        write!(f, "{}", menu_table)
     }
 }
 
-impl MainMenu<Entry> {
-    pub fn init() -> Self {
+impl Menu<Entry> {
+    pub fn new(entry_list: Vec<(String, Entry)>) -> Self {
         Self {
-            new_address: Entry::build("1", "새 주소록 만들기"),
-            open_address: Entry::build("2", "기존 주소록 열기"),
-            create: Entry::build("3", "새 주소"),
-            read: Entry::build("4", "찾기"),
-            update: Entry::build("5", "수정"),
-            delete: Entry::build("6", "삭제"),
+            entry: entry_list.into_iter().collect(),
         }
     }
 
-    pub fn display(&self) {
+    pub fn run(&self) {
+        // display the menu and wait for a user input.
         println!("{}", self);
+        let mut input = String::new();
+        stdin().read_line(&mut input).unwrap();
+
+        // fetch the callback.
+        let value = self.entry.get(input.trim());
+        println!("{:?}", value);
     }
 }
