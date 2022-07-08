@@ -1,10 +1,7 @@
+use crate::core::default::Node;
 use std::collections::BTreeMap;
 use std::fmt;
 use std::io::stdin;
-
-pub trait Node: fmt::Display {
-    fn run(&self);
-}
 
 /// 하위 노드를 가지는 노드.
 pub struct Internal {
@@ -47,7 +44,7 @@ impl Internal {
     /// 초기화 후 하위 노드 추가
     pub fn add_menu(&mut self, sub_node: Vec<(String, Box<dyn Node>)>) {
         match sub_node.is_empty() {
-            true => println!("[Warning] 'parameter: sub_node' is empty!"),
+            true => panic!("[Error] 'parameter: sub_node' is empty!"),
             false => self.sub_node = sub_node.into_iter().collect(),
         }
     }
@@ -68,6 +65,7 @@ impl Internal {
 /// 하위 노드가 없는 말단 노드.
 pub struct Leaf {
     name: String,
+    hook: 
 }
 
 impl fmt::Display for Leaf {
@@ -87,5 +85,9 @@ impl Leaf {
         Box::new(Self {
             name,
         })
+    }
+
+    pub fn add_hook() {
+
     }
 }
