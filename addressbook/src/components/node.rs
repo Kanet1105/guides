@@ -65,7 +65,6 @@ impl Internal {
 /// 하위 노드가 없는 말단 노드.
 pub struct Leaf {
     name: String,
-    hook: 
 }
 
 impl fmt::Display for Leaf {
