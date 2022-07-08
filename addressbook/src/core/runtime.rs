@@ -1,40 +1,31 @@
-use crate::core::default::Node;
+use crate::core::default::{Node, State};
 use std::cell::RefCell;
-use std::collections::vec_deque::VecDeque;
-use std::path::PathBuf;
+use std::vec::Vec;
 use std::rc::Rc;
 
 /// Single Thread 에서만 안전한 runtime
 pub struct Application {
-    call_stack: RefCell<VecDeque<Box<dyn Node>>>,
-    base_path: PathBuf,
+    node_stack: Vec<Box<dyn Node>>,
+    state: Box<dyn State>,
 }
 
 impl Application {
-    pub fn new(root_node: Box<dyn Node>, base_path: &'static str) -> Rc<Self> {
-        let mut stack = VecDeque::new();
-        stack.push_back(root_node);
-
-        let mut path = PathBuf::from(base_path);
-
-        Rc::new(Self {
-            call_stack: RefCell::new(stack),
-            base_path: path,
-        })
+    pub fn new(state: Box<dyn State>) -> Rc<RefCell<Self>> {
+        Rc::new(RefCell::new(Self {
+            node_stack: Vec::new(),
+            state,
+        }))
     }
 
-    pub fn register(&self, node: Box<dyn Node>) {
-        let mut controller = self.call_stack.borrow_mut();
-        controller.push_back(node);
+    pub fn register(&mut self, node: Box<dyn Node>) {
+        self.node_stack.push(node);
     }
 
-    pub fn run(&self) {
-        let mut controller = self.call_stack.borrow_mut();
-
-        match controller.is_empty() {
-            true => println!("Shutting down the program.."),
+    pub fn run(&mut self) {
+        match self.node_stack.is_empty() {
+            true => panic!("Node stack is empty; is this intended? Shutting down the program.."),
             false => {
-                let node = controller.pop_front().unwrap();
+                let node = self.node_stack.pop().unwrap();
                 node.run();
             },
         }

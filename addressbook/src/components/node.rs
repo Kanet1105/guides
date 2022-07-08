@@ -65,6 +65,7 @@ impl Internal {
 /// 하위 노드가 없는 말단 노드.
 pub struct Leaf {
     name: String,
+    hook: (),
 }
 
 impl fmt::Display for Leaf {
@@ -75,18 +76,15 @@ impl fmt::Display for Leaf {
 
 impl Node for Leaf {
     fn run(&self) {
-        println!("{} is a leaf node.", self);
+        self.hook;
     }
 }
 
 impl Leaf {
-    pub fn new(name: String) -> Box<Self> {
+    pub fn new(name: String, hook: ()) -> Box<Self> {
         Box::new(Self {
             name,
+            hook,
         })
-    }
-
-    pub fn add_hook() {
-
     }
 }
