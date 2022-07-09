@@ -1,5 +1,3 @@
-use std::borrow::BorrowMut;
-
 use crate::core::default;
 
 pub struct Application {
@@ -21,7 +19,7 @@ impl Application {
         router.insert(route, callback);
     }
 
-    /// Vec 타입으로 추가 시 사용.
+    /// 노드 여러 개 추가 시 사용.
     pub fn register_from(&self, route_list: Vec<(String, default::Callback)>) {
         let mut router = self.router.borrow_mut();
         for (route, callback) in route_list {
@@ -29,7 +27,22 @@ impl Application {
         }
     }
 
-    pub fn run(&self, locator: String, app: default::App) {
-        
+    pub fn append_callback(&self, locator: String) {
+        let call_stack = self.call_stack.borrow_mut();
+        call_stack.push(locator);
+    }
+
+    fn pop_call_stack(&self) {
+        let call_stack = self.call_stack.borrow();
+    }
+
+    pub fn run(&self, app: default::App, root_node: String) {
+        let call_stack = self.call_stack.borrow();
+        loop {
+            match call_stack.is_empty() {
+                true => self.append_callback("/".to_string()),
+                false => {},
+            }
+        }
     }
 }
