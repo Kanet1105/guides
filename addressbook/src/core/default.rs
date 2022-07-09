@@ -13,7 +13,7 @@ pub fn new_callback(function: fn(app: App)) -> Callback {
     Rc::new(function)
 }
 
-pub type CallStack = RefCell<Vec<String>>;
+pub type CallStack = RefCell<Vec<Callback>>;
 pub fn new_call_stack() -> CallStack {
     RefCell::new(Vec::new())
 }

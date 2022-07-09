@@ -27,21 +27,28 @@ impl Application {
         }
     }
 
-    pub fn append_callback(&self, locator: String) {
-        let call_stack = self.call_stack.borrow_mut();
-        call_stack.push(locator);
+    pub fn append_node<'a>(&self, locator: &'a str) {
+        let router = self.router.borrow();
+        let callback = router.get(locator);
+        match callback {
+            Some(callback) => {
+                self.call_stack.borrow_mut().push(callback.clone());
+            },
+            None => panic!("No callback registered under '{}'.. Shutting down..", locator),
+        }
     }
 
-    fn pop_call_stack(&self) {
-        let call_stack = self.call_stack.borrow();
+    pub fn fetch_callback(&self) -> Option<default::Callback> {
+        self.call_stack.borrow_mut().pop()
     }
 
     pub fn run(&self, app: default::App, root_node: String) {
-        let call_stack = self.call_stack.borrow();
+        let root = root_node;
         loop {
-            match call_stack.is_empty() {
-                true => self.append_callback("/".to_string()),
-                false => {},
+            let callback = self.fetch_callback();
+            match callback {
+                Some(callback) => (callback)(app.clone()),
+                None => self.append_node(&root),
             }
         }
     }
