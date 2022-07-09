@@ -1,5 +1,3 @@
-use addressbook::app::run_app;
-
 fn main() {
-    run_app();
+    addressbook::app::run_app();
 }
