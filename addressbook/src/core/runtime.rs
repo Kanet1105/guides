@@ -1,33 +1,35 @@
-use crate::core::default::{Node, State};
-use std::cell::RefCell;
-use std::vec::Vec;
-use std::rc::Rc;
+use std::borrow::BorrowMut;
 
-/// Single Thread 에서만 안전한 runtime
+use crate::core::default;
+
 pub struct Application {
-    node_stack: Vec<Box<dyn Node>>,
-    state: Box<dyn State>,
+    call_stack: default::CallStack,
+    router: default::Router,
 }
 
 impl Application {
-    pub fn new(state: Box<dyn State>) -> Rc<RefCell<Self>> {
-        Rc::new(RefCell::new(Self {
-            node_stack: Vec::new(),
-            state,
-        }))
-    }
-
-    pub fn register(&mut self, node: Box<dyn Node>) {
-        self.node_stack.push(node);
-    }
-
-    pub fn run(&mut self) {
-        match self.node_stack.is_empty() {
-            true => panic!("Node stack is empty; is this intended? Shutting down the program.."),
-            false => {
-                let node = self.node_stack.pop().unwrap();
-                node.run();
-            },
+    pub fn new() -> Self {
+        Self {
+            call_stack: default::new_call_stack(),
+            router: default::new_router(),
         }
+    }
+
+    /// 단일 노드 추가 시 사용.
+    pub fn register_node(&self, route: String, callback: default::Callback) {
+        let mut router = self.router.borrow_mut();
+        router.insert(route, callback);
+    }
+
+    /// Vec 타입으로 추가 시 사용.
+    pub fn register_from(&self, route_list: Vec<(String, default::Callback)>) {
+        let mut router = self.router.borrow_mut();
+        for (route, callback) in route_list {
+            router.insert(route, callback);
+        }
+    }
+
+    pub fn run(&self, locator: String, app: default::App) {
+        
     }
 }
