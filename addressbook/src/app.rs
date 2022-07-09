@@ -7,5 +7,8 @@ pub fn run_app() {
         ("/".to_string(), new_callback(menu::main_menu)),
         ("/view_all".to_string(), new_callback(menu::view_all)),
         ("/new_profile".to_string(), new_callback(menu::new_profile)),
+        ("/find_profile".to_string(), new_callback(menu::find_profile)),
+        ("/exit".to_string(), new_callback(menu::exit)),
     ]);
+    app.run(app.clone(), "/".to_string());
 }
