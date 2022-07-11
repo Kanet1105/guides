@@ -1,3 +1,4 @@
+use crate::core::filesystem::FileExplorer;
 use crate::core::runtime::Application;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -21,4 +22,9 @@ pub fn new_call_stack() -> CallStack {
 pub type Router = RefCell<HashMap<String, Callback>>;
 pub fn new_router() -> Router {
     RefCell::new(HashMap::new())
+}
+
+pub type Navigator = Rc<FileExplorer>;
+pub fn new_navigator() -> Navigator {
+    Rc::new(FileExplorer::new())
 }
