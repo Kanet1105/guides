@@ -15,5 +15,4 @@
 Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들. 프로그램
 기본 빌딩 블럭.
 
-#### Todo()!
-1. src/components/menu.rs 모듈에 함수 컴포넌트처럼 작성 후 끝까지 완성.
+## Crawler
