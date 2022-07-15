@@ -1,39 +1,22 @@
-use std::boxed::Box;
-use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-use std::thread;
+use headless_chrome::{Browser, LaunchOptions};
+use std::io::stdin;
+use std::sync::Arc;
+use std::mem::size_of_val;
 
-fn example() -> usize {
-    let x: &'static _ = Box::leak(Box::new(AtomicBool::new(false)));
-    let y: &'static _ = Box::leak(Box::new(AtomicBool::new(false)));
-    let z: &'static _ = Box::leak(Box::new(AtomicUsize::new(0)));
-
-    let _tx = thread::spawn(move || {
-        x.store(true, Ordering::Release);
-    });
-    let _ty = thread::spawn(move || {
-        y.store(true, Ordering::Release);
-    });
-    let t1 = thread::spawn(move || {
-        while !x.load(Ordering::Acquire) {}
-        if y.load(Ordering::Acquire) {
-            z.fetch_add(1, Ordering::Relaxed);
-        }
-    });
-    let t2 = thread::spawn(move || {
-        while !y.load(Ordering::Acquire) {}
-        if x.load(Ordering::Acquire) {
-            z.fetch_add(1, Ordering::Relaxed);
-        }
-    });
-    t1.join().unwrap();
-    t2.join().unwrap();
-    let z = z.load(Ordering::SeqCst);
-    z
+fn command(browser: Arc<Browser>) {
+    let mut input = String::new();
+    stdin().read_line(&mut input).unwrap();
+    if input.trim() == "1" {
+        browser.new_tab().unwrap();
+    }
 }
 
 fn main() {
-    for i in 0..1000 {
-        let z = example();
-        dbg!(z);
+    let mut options = LaunchOptions::default();
+    options.headless = false;
+    let browser = Arc::new(Browser::new(options).unwrap());
+    let current_tab = browser.wait_for_initial_tab().unwrap();
+    loop {
+        command(browser.clone());
     }
 }
