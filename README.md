@@ -15,4 +15,4 @@
 Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들. 프로그램
 기본 빌딩 블럭.
 
-## Multi-threaded Runtime (http)
+## Multi-threaded Runtime (webserver)
