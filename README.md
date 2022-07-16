@@ -1,6 +1,6 @@
 # GUIDES
 
-## Single-threaded Runtime (Addressbook)
+## Single-threaded Runtime (addressbook)
 #### Core
 ##### 1. default.rs
 - 커스텀 타입 aliasing 및 초기화 기능 제공 모듈.
@@ -16,4 +16,3 @@ Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들
 기본 빌딩 블럭.
 
 ## Multi-threaded Runtime (http)
-Serves as a guideline for using atomic types and async programming.
