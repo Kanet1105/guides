@@ -25,7 +25,6 @@ Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들
 - 비동기 런타임 + 웹 프레임워크
 
 #### parallel
-- parallelism 으로 비동기 런타임 구현.
 ##### 1. exception.rs
 - 사용자 정의 예외 crate.
 ##### 2. threadpool.rs
