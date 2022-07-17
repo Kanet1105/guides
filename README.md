@@ -17,9 +17,18 @@ Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들
 
 ## Multi-threaded Runtime (webserver)
 #### http
-##### 1. request.rs
+##### 1. request.rs 
+- 유저 request 파싱 후 ORM
 ##### 2. response.rs
+- GET 요청에 대한 Response 기능 crate.
 ##### 3. server.rs
+- 비동기 런타임 + 웹 프레임워크
+
 #### parallel
+- parallelism 으로 비동기 런타임 구현.
 ##### 1. exception.rs
+- 사용자 정의 예외 crate.
 ##### 2. threadpool.rs
+- Head of the Line Block 방지 가능한 멀티스레드 런타임.
+#### static
+- 정적 html 웹 페이지 저장소.
