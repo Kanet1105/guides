@@ -3,5 +3,4 @@
 members = [
     "addressbook",
     "webserver",
-    "oauth2",
 ]
