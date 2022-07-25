@@ -31,3 +31,9 @@ Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들
 - Head of the Line Block 방지 가능한 멀티스레드 런타임.
 #### static
 - 정적 html 웹 페이지 저장소.
+
+#### oauth
+##### 1. Yew (WASM Web Framework)
+- 웹어셈블리 웹 프론트엔드 프레임워크
+##### 2. Google API
+- 구글 인덱싱 API
