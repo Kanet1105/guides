@@ -27,12 +27,12 @@ pub fn get_login_url() -> Url {
         RedirectUrl::new("http://127.0.0.1:8080/signin".to_string()).unwrap(),
     );
 
-    let (pkce_challenge, pkce_verifier) = PkceCodeChallenge::new_random_sha256();
-    let (auth_url, csrf_token) = client
+    let (pkce_challenge, _pkce_verifier) = PkceCodeChallenge::new_random_sha256();
+    let (authorize_url, _csrf_token) = client
         .authorize_url(CsrfToken::new_random)
         .add_scope(Scope::new("openid".to_string()))
         .set_pkce_challenge(pkce_challenge)
         .url();
 
-    auth_url
+    authorize_url
 }

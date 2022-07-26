@@ -1,7 +1,4 @@
 use std::cell::RefCell;
-use std::rc::Rc;
-
-use yew::prelude::*;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct UserState {
