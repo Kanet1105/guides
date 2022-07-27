@@ -5,6 +5,7 @@ use components::AppState;
 
 mod pages;
 use pages::SignIn;
+use pages::Auth;
 
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -15,6 +16,8 @@ enum Route {
     Home,
     #[at("/signin")]
     SignIn,
+    #[at("/auth")]
+    Auth,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -24,6 +27,7 @@ fn switch(route: &Route) -> Html {
     match route {
         Route::Home => html! { "Home" },
         Route::SignIn => html! { <SignIn /> },
+        Route::Auth => html! { <Auth /> },
         Route::NotFound => html! { <h1>{ "[404] Not Found" }</h1> },
     }
 }

@@ -24,7 +24,7 @@ pub fn get_login_url() -> Url {
         Some(TokenUrl::new("https://www.googleapis.com/oauth2/v3/token".to_string()).unwrap()),
     )
     .set_redirect_uri(
-        RedirectUrl::new("http://127.0.0.1:8080/signin".to_string()).unwrap(),
+        RedirectUrl::new("http://127.0.0.1:8080/auth".to_string()).unwrap(),
     );
 
     let (pkce_challenge, _pkce_verifier) = PkceCodeChallenge::new_random_sha256();
