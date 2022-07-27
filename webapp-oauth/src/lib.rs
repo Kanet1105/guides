@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 mod components;
-use components::UserState;
+use components::AppState;
 
 mod pages;
 use pages::SignIn;
@@ -30,13 +30,13 @@ fn switch(route: &Route) -> Html {
 
 #[function_component(App)]
 pub fn app() -> Html {
-    let user_state = use_state(|| Rc::new(UserState::default()));
+    let user_state = use_state(|| Rc::new(AppState::default()));
 
     html! {
-        <ContextProvider<Rc<UserState>> context={Rc::clone(&user_state)}>
+        <ContextProvider<Rc<AppState>> context={Rc::clone(&user_state)}>
             <BrowserRouter>
                 <Switch<Route> render={Switch::render(switch)} />
             </BrowserRouter>
-        </ContextProvider<Rc<UserState>>>
+        </ContextProvider<Rc<AppState>>>
     }
 }
