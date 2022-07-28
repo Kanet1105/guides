@@ -35,6 +35,8 @@ Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들
 ## Web Frontend with Oauth2.0
 #### front-end (WASM Web Framework)
 - Yew + OAuth2
+- 로그인 페이지 리다이렉션 및 백엔드 인증 서버로 토큰 전송
 
 ## Web Backend with Oauth2.0
 #### Actix-web + OAuth2
+- 세션 발급
