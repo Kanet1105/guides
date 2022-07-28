@@ -34,4 +34,7 @@ Callback 타입으로 초기화된 후 프로그램에서 실행되는 함수들
 
 ## Web Frontend with Oauth2.0
 #### front-end (WASM Web Framework)
-- 웹어셈블리 웹 프론트엔드 프레임워크 + Google API Console 
+- Yew + OAuth2
+
+## Web Backend with Oauth2.0
+#### Actix-web + OAuth2
