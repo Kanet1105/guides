@@ -5,4 +5,5 @@ members = [
     "webserver",
     "webapp-oauth",
     "webapp-backend",
+    "data-structure",
 ]
