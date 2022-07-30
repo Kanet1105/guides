@@ -5,8 +5,8 @@ use actix_files::NamedFile;
 use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_web::dev::Server;
 use actix_web::web;
-
 use serde::Deserialize;
+use oauth2::basic::BasicClient;
 
 #[derive(Debug, Deserialize)]
 struct UserInfo {
@@ -18,7 +18,8 @@ struct UserInfo {
 }
 
 // "/"
-async fn index() -> std::io::Result<NamedFile> {
+async fn index(oauth_client: web::Data<BasicClient>) -> std::io::Result<NamedFile> {
+    dbg!(oauth_client);
     let index_path = std::path::PathBuf::from("/static/index.html");
     Ok(NamedFile::open(index_path)?)
 }
