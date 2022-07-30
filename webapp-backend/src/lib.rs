@@ -19,14 +19,14 @@ struct UserInfo {
 
 // "/"
 async fn index(oauth_client: web::Data<BasicClient>) -> std::io::Result<NamedFile> {
-    dbg!(oauth_client);
+    println!("{:?}", &oauth_client);
     let index_path = std::path::PathBuf::from("/static/index.html");
     Ok(NamedFile::open(index_path)?)
 }
 
 // "/auth"
 async fn authorize(user_info: web::Data<UserInfo>) -> impl Responder {
-    println!("{:?}", user_info);
+    println!("{:?}", &user_info);
     HttpResponse::Ok().finish()
 }
 
