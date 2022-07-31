@@ -13,20 +13,25 @@ use oauth2::basic::BasicClient;
 async fn index(oauth_client: web::Data<BasicClient>) -> impl Responder {
     let client = oauth_client.get_ref();
     let redirect_url = get_login_url(client);
+    println!("===========================================================================");
     println!("{}", redirect_url.to_string());
+    println!("===========================================================================");
     HttpResponse::Ok().finish()
 }
 
 /// "/auth"
 async fn auth(user_info: web::Query<UserInfo>) -> impl Responder {
+    println!("===========================================================================");
     println!("{:?}", &user_info);
+    println!("===========================================================================");
     HttpResponse::Ok().finish()
 }
 
 pub fn run_app() -> Result<Server, std::io::Error> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-
+    println!("===========================================================================");
     println!("Starting the http server at 'http://127.0.0.1:8080'.");
+    println!("===========================================================================");
 
     let server = HttpServer::new(|| {
         let oauth_client = web::Data::new(get_oauth_client().unwrap());
