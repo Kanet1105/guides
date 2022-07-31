@@ -1,44 +1,40 @@
 mod login;
-use login::get_oauth_client;
+use login::{get_oauth_client, get_login_url};
+use login::UserInfo;
 
-use actix_files::NamedFile;
 use actix_web::{App, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_web::dev::Server;
+use actix_web::middleware::Logger;
 use actix_web::web;
-use serde::Deserialize;
+use env_logger;
 use oauth2::basic::BasicClient;
 
-#[derive(Debug, Deserialize)]
-struct UserInfo {
-    state: String,
-    code: String,
-    scope: String,
-    authuser: String,
-    prompt: String,
+/// "/"
+async fn index(oauth_client: web::Data<BasicClient>) -> impl Responder {
+    let client = oauth_client.get_ref();
+    let redirect_url = get_login_url(client);
+    println!("{}", redirect_url.to_string());
+    HttpResponse::Ok().finish()
 }
 
-// "/"
-async fn index(oauth_client: web::Data<BasicClient>) -> std::io::Result<NamedFile> {
-    println!("{:?}", &oauth_client);
-    let index_path = std::path::PathBuf::from("/static/index.html");
-    Ok(NamedFile::open(index_path)?)
-}
-
-// "/auth"
-async fn authorize(user_info: web::Data<UserInfo>) -> impl Responder {
+/// "/auth"
+async fn auth(user_info: web::Query<UserInfo>) -> impl Responder {
     println!("{:?}", &user_info);
     HttpResponse::Ok().finish()
 }
 
 pub fn run_app() -> Result<Server, std::io::Error> {
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
     println!("Starting the http server at 'http://127.0.0.1:8080'.");
 
     let server = HttpServer::new(|| {
         let oauth_client = web::Data::new(get_oauth_client().unwrap());
         App::new()
+            .wrap(Logger::default())
             .app_data(oauth_client)
             .route("/", web::get().to(index))
-            .route("/auth", web::get().to(authorize))
+            .route("/auth", web::get().to(auth))
     })
     .bind("127.0.0.1:8080")?
     .run();
